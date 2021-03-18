@@ -8,7 +8,7 @@ const BUSD_WBNB_PAIR = '0x1b96b92314c44b159149f7e0303511fb2fc4774f' // created b
 const DAI_WBNB_PAIR = '0xf3010261b58b2874639ca2e860e9005e3be5de0b'  // created block 481116
 const USDT_WBNB_PAIR = '0x20bcc3b8a0091ddac2d0bc30f68e6cbb97de59cd' // created block 648115
 
-export function getEthPriceInUSD(): BigDecimal {
+export function getBnbPriceInUSD(): BigDecimal {
   // fetch eth prices for each stablecoin
   let usdtPair = Pair.load(USDT_WBNB_PAIR) // usdt is token0
   let busdPair = Pair.load(BUSD_WBNB_PAIR) // busd is token1
@@ -61,7 +61,7 @@ let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('2')
  * Search through graph to find derived Eth per token.
  * @todo update to be derived ETH (add stablecoin estimates)
  **/
-export function findEthPerToken(token: Token): BigDecimal {
+export function findBnbPerToken(token: Token): BigDecimal {
   if (token.id == WBNB_ADDRESS) {
     return ONE_BD
   }
@@ -72,11 +72,11 @@ export function findEthPerToken(token: Token): BigDecimal {
       let pair = Pair.load(pairAddress.toHexString())
       if (pair.token0 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
         let token1 = Token.load(pair.token1)
-        return pair.token1Price.times(token1.derivedETH as BigDecimal) // return token1 per our token * Eth per token 1
+        return pair.token1Price.times(token1.derivedBNB as BigDecimal) // return token1 per our token * Eth per token 1
       }
       if (pair.token1 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
         let token0 = Token.load(pair.token0)
-        return pair.token0Price.times(token0.derivedETH as BigDecimal) // return token0 per our token * ETH per token 0
+        return pair.token0Price.times(token0.derivedBNB as BigDecimal) // return token0 per our token * ETH per token 0
       }
     }
   }
@@ -96,8 +96,8 @@ export function getTrackedVolumeUSD(
   token1: Token
 ): BigDecimal {
   let bundle = Bundle.load('1')
-  let price0 = token0.derivedETH.times(bundle.ethPrice)
-  let price1 = token1.derivedETH.times(bundle.ethPrice)
+  let price0 = token0.derivedBNB.times(bundle.bnbPrice)
+  let price1 = token1.derivedBNB.times(bundle.bnbPrice)
 
   // both are whitelist tokens, take average of both amounts
   if (WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
@@ -134,8 +134,8 @@ export function getTrackedLiquidityUSD(
   tokenAmount1: BigDecimal,
   token1: Token
 ): BigDecimal {
-  let price0 = token0.derivedETH.times(bundle.ethPrice)
-  let price1 = token1.derivedETH.times(bundle.ethPrice)
+  let price0 = token0.derivedBNB.times(bundle.bnbPrice)
+  let price1 = token1.derivedBNB.times(bundle.bnbPrice)
 
   // both are whitelist tokens, take average of both amounts
   if (WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {

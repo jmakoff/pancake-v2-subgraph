@@ -44,7 +44,7 @@ type Token @entity {
   totalLiquidity: BigDecimal!
 
   # derived prices
-  derivedETH: BigDecimal
+  derivedBNB: BigDecimal
 
   # derived fields
   tokenDayData: [TokenDayData!]! @derivedFrom(field: "token")
@@ -167,6 +167,9 @@ type Swap @entity {
   amount1In: BigDecimal!
   amount0Out: BigDecimal!
   amount1Out: BigDecimal!
+  priceUSD: BigDecimal!
+  priceBNB: BigDecimal
+  totalBNB: BigDecimal
   to: Bytes!
   logIndex: BigInt
 
@@ -177,7 +180,7 @@ type Swap @entity {
 # stores for USD calculations
 type Bundle @entity {
   id: ID!
-  ethPrice: BigDecimal! # price of ETH usd
+  bnbPrice: BigDecimal! # price of BNB in usd
 }
 
 # Data accumulated and condensed into day stats for all of Uniswap

@@ -28,7 +28,7 @@ export function handleNewPair(event: PairCreated): void {
 
     // create new bundle
     let bundle = new Bundle('1')
-    bundle.ethPrice = ZERO_BD
+    bundle.bnbPrice = ZERO_BD
     bundle.save()
   }
   factory.pairCount = factory.pairCount + 1
@@ -52,7 +52,7 @@ export function handleNewPair(event: PairCreated): void {
     }
 
     token0.decimals = decimals
-    token0.derivedETH = ZERO_BD
+    token0.derivedBNB = ZERO_BD
     token0.tradeVolume = ZERO_BD
     token0.tradeVolumeUSD = ZERO_BD
     token0.untrackedVolumeUSD = ZERO_BD
@@ -74,7 +74,7 @@ export function handleNewPair(event: PairCreated): void {
       return
     }
     token1.decimals = decimals
-    token1.derivedETH = ZERO_BD
+    token1.derivedBNB = ZERO_BD
     token1.tradeVolume = ZERO_BD
     token1.tradeVolumeUSD = ZERO_BD
     token1.untrackedVolumeUSD = ZERO_BD

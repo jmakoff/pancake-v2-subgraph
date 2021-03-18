@@ -104,17 +104,17 @@ export function updateTokenDayData(token: Token, event: ethereum.Event): TokenDa
     tokenDayData = new TokenDayData(tokenDayID)
     tokenDayData.date = dayStartTimestamp
     tokenDayData.token = token.id
-    tokenDayData.priceUSD = token.derivedETH.times(bundle.ethPrice)
+    tokenDayData.priceUSD = token.derivedBNB.times(bundle.bnbPrice)
     tokenDayData.dailyVolumeToken = ZERO_BD
     tokenDayData.dailyVolumeETH = ZERO_BD
     tokenDayData.dailyVolumeUSD = ZERO_BD
     tokenDayData.dailyTxns = ZERO_BI
     tokenDayData.totalLiquidityUSD = ZERO_BD
   }
-  tokenDayData.priceUSD = token.derivedETH.times(bundle.ethPrice)
+  tokenDayData.priceUSD = token.derivedBNB.times(bundle.bnbPrice)
   tokenDayData.totalLiquidityToken = token.totalLiquidity
-  tokenDayData.totalLiquidityETH = token.totalLiquidity.times(token.derivedETH as BigDecimal)
-  tokenDayData.totalLiquidityUSD = tokenDayData.totalLiquidityETH.times(bundle.ethPrice)
+  tokenDayData.totalLiquidityETH = token.totalLiquidity.times(token.derivedBNB as BigDecimal)
+  tokenDayData.totalLiquidityUSD = tokenDayData.totalLiquidityETH.times(bundle.bnbPrice)
   tokenDayData.dailyTxns = tokenDayData.dailyTxns.plus(ONE_BI)
   tokenDayData.save()
 
