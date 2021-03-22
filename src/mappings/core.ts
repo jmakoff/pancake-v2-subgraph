@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { BigInt, BigDecimal, store } from '@graphprotocol/graph-ts'
+import { BigInt, BigDecimal, store, Address } from '@graphprotocol/graph-ts'
 import {
   Pair,
   Token,
@@ -10,7 +10,7 @@ import {
   Swap as SwapEvent,
   Bundle
 } from '../types/schema'
-import { Mint, Burn, Swap, Transfer, Sync } from '../types/templates/Pair/Pair'
+import { Pair as PairContract, Mint, Burn, Swap, Transfer, Sync } from '../types/templates/Pair/Pair'
 import { updatePairDayData, updateTokenDayData, updateUniswapDayData, updatePairHourData } from './dayUpdates'
 import { getBnbPriceInUSD, findBnbPerToken, getTrackedVolumeUSD, getTrackedLiquidityUSD } from './pricing'
 import {
@@ -19,7 +19,10 @@ import {
   FACTORY_ADDRESS,
   ONE_BI,
   ZERO_BD,
-  BI_18
+  BI_18,
+  createLiquidityPosition,
+  createLiquiditySnapshot,
+  createUser,
 } from './helpers'
 
 function isCompleteMint(mintId: string): boolean {
@@ -35,11 +38,15 @@ export function handleTransfer(event: Transfer): void {
   let factory = UniswapFactory.load(FACTORY_ADDRESS)
   let transactionHash = event.transaction.hash.toHexString()
 
+  // user stats
   let from = event.params.from
+  createUser(from)
   let to = event.params.to
+  createUser(to)
 
   // get pair and load contract
   let pair = Pair.load(event.address.toHexString())
+  let pairContract = PairContract.bind(event.address)
 
   // liquidity token amount being transferred
   let value = convertTokenToDecimal(event.params.value, BI_18)
@@ -184,6 +191,20 @@ export function handleTransfer(event: Transfer): void {
     }
     transaction.burns = burns
     transaction.save()
+  }
+
+  if (from.toHexString() != ADDRESS_ZERO && from.toHexString() != pair.id) {
+    let fromUserLiquidityPosition = createLiquidityPosition(event.address, from)
+    fromUserLiquidityPosition.liquidityTokenBalance = convertTokenToDecimal(pairContract.balanceOf(from), BI_18)
+    fromUserLiquidityPosition.save()
+    createLiquiditySnapshot(fromUserLiquidityPosition, event)
+  }
+
+  if (event.params.to.toHexString() != ADDRESS_ZERO && to.toHexString() != pair.id) {
+    let toUserLiquidityPosition = createLiquidityPosition(event.address, to)
+    toUserLiquidityPosition.liquidityTokenBalance = convertTokenToDecimal(pairContract.balanceOf(to), BI_18)
+    toUserLiquidityPosition.save()
+    createLiquiditySnapshot(toUserLiquidityPosition, event)
   }
 
   transaction.save()
@@ -387,7 +408,7 @@ export function handleSwap(event: Swap): void {
   let derivedAmountUSD = derivedAmountBNB.times(bundle.bnbPrice)
 
   // only accounts for volume through white listed tokens
-  let trackedAmountUSD = getTrackedVolumeUSD(amount0Total, token0 as Token, amount1Total, token1 as Token)
+  let trackedAmountUSD = getTrackedVolumeUSD(amount0Total, token0 as Token, amount1Total, token1 as Token, pair as Pair)
 
   let trackedAmountBNB: BigDecimal
   if (bundle.bnbPrice.equals(ZERO_BD)) {
