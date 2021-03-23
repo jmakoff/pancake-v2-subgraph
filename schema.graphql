@@ -57,6 +57,7 @@ type Token @entity {
 type Pair @entity {
   # pair address
   id: ID!
+  platform: String!
 
   # mirrored from the smart contract
   token0: Token!
