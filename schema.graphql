@@ -297,7 +297,6 @@ type LiquidityPositionSnapshot @entity {
   liquidityTokenTotalSupply: BigDecimal! # snapshot of pool token supply
   liquidityTokenBalance: BigDecimal! # snapshot of users pool token balance
 }
-
 type Pair1minData @entity {
   id: ID!
   pair: Pair!
@@ -313,7 +312,7 @@ type Pair1minData @entity {
   lowToken0Price: BigDecimal!
 }
 
-type Pair3minData @entity {
+type Pair5minData @entity {
   id: ID!
   pair: Pair!
   startTimestamp: Int!
@@ -327,7 +326,7 @@ type Pair3minData @entity {
   lowToken1Price: BigDecimal!
   lowToken0Price: BigDecimal!
 }
-type Pair5minData @entity {
+type Pair15minData @entity {
   id: ID!
   pair: Pair!
   startTimestamp: Int!
@@ -374,23 +373,7 @@ type Pair1hData @entity {
 }
 
 
-type Pair2hData @entity {
-  id: ID!
-  pair: Pair!
-  startTimestamp: Int!
-  maxTimestamp: Int!
-  openToken1Price: BigDecimal!
-  openToken0Price: BigDecimal!
-  closeToken1Price: BigDecimal!
-  closeToken0Price: BigDecimal!
-  highToken1Price: BigDecimal!
-  highToken0Price: BigDecimal!
-  lowToken1Price: BigDecimal!
-  lowToken0Price: BigDecimal!
-}
-
-
-type Pair4hData @entity {
+type Pair3hData @entity {
   id: ID!
   pair: Pair!
   startTimestamp: Int!
@@ -422,7 +405,38 @@ type Pair6hData @entity {
 }
 
 
+type Pair12hData @entity {
+  id: ID!
+  pair: Pair!
+  startTimestamp: Int!
+  maxTimestamp: Int!
+  openToken1Price: BigDecimal!
+  openToken0Price: BigDecimal!
+  closeToken1Price: BigDecimal!
+  closeToken0Price: BigDecimal!
+  highToken1Price: BigDecimal!
+  highToken0Price: BigDecimal!
+  lowToken1Price: BigDecimal!
+  lowToken0Price: BigDecimal!
+}
+
+
 type Pair1dData @entity {
+  id: ID!
+  pair: Pair!
+  startTimestamp: Int!
+  maxTimestamp: Int!
+  openToken1Price: BigDecimal!
+  openToken0Price: BigDecimal!
+  closeToken1Price: BigDecimal!
+  closeToken0Price: BigDecimal!
+  highToken1Price: BigDecimal!
+  highToken0Price: BigDecimal!
+  lowToken1Price: BigDecimal!
+  lowToken0Price: BigDecimal!
+}
+
+type Pair3dData @entity {
   id: ID!
   pair: Pair!
   startTimestamp: Int!
