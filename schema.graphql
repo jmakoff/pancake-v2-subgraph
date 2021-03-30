@@ -171,6 +171,7 @@ type Swap @entity {
   amount1In: BigDecimal!
   amount0Out: BigDecimal!
   amount1Out: BigDecimal!
+  amountToken: BigDecimal!
   priceUSD: BigDecimal!
   priceBNB: BigDecimal
   totalBNB: BigDecimal
