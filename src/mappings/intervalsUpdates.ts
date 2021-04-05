@@ -11,25 +11,28 @@ import {
   Pair1dData,
   Pair3dData
 } from './../types/schema'
-import { Entity, BigInt, BigDecimal, ethereum } from '@graphprotocol/graph-ts'
-import { Pair, Bundle, Token, UniswapFactory, UniswapDayData, PairDayData, TokenDayData } from '../types/schema'
-import { ONE_BI, ZERO_BD, ZERO_BI, FACTORY_ADDRESS } from './helpers'
+import { BigInt, BigDecimal, ethereum } from '@graphprotocol/graph-ts'
+import { Pair, Bundle, Token } from '../types/schema'
+import { ZERO_BD, convertTokenToDecimal } from './helpers'
+import { updateIntervalsVolumes } from './intervalsVolumes';
+import { Swap } from '../types/templates/Pair/Pair'
 
-export function updateIntervalsData (event: ethereum.Event): void{
-  update1minData(event)
-  update5minData(event)
-  update15minData(event)
-  update30minData(event)
-  update1hData(event)
-  update3hData(event)
-  update6hData(event)
-  update12hData(event)
-  update1dData(event)
-  update3dData(event)
+
+export function updateIntervalsData (event: ethereum.Event, updateVolumes: boolean): void{
+  update1minData(event, updateVolumes)
+  update5minData(event, updateVolumes)
+  update15minData(event, updateVolumes)
+  update30minData(event, updateVolumes)
+  update1hData(event, updateVolumes)
+  update3hData(event, updateVolumes)
+  update6hData(event, updateVolumes)
+  update12hData(event, updateVolumes)
+  update1dData(event, updateVolumes)
+  update3dData(event, updateVolumes)
 }
 
 
-function update1minData (event: ethereum.Event): void {
+function update1minData (event: ethereum.Event, updateVolumes: boolean): void {
     let intervalInSec = 60 //value of period in sec
 
     let timestamp = event.block.timestamp.toI32()
@@ -51,6 +54,8 @@ function update1minData (event: ethereum.Event): void {
     if (pairIntervalData === null) {
       pairIntervalData = new Pair1minData (intervalEntityID)
 
+      pairIntervalData.volumeBNB = ZERO_BD
+      pairIntervalData.volumeUSD = ZERO_BD
       pairIntervalData.startTimestamp = intervalStartUnix
       pairIntervalData.maxTimestamp = timestamp
       pairIntervalData.pair = pair.id
@@ -106,10 +111,13 @@ function update1minData (event: ethereum.Event): void {
     pairIntervalData.highToken1BNB = pairIntervalData.highToken1BNB > token1.derivedBNB ?  pairIntervalData.highToken1BNB : token1.derivedBNB
     pairIntervalData.lowToken0BNB = pairIntervalData.lowToken0BNB < token0.derivedBNB ?  pairIntervalData.lowToken0BNB : token0.derivedBNB
     pairIntervalData.lowToken1BNB = pairIntervalData.lowToken1BNB < token1.derivedBNB ?  pairIntervalData.lowToken1BNB : token1.derivedBNB
+    if (updateVolumes) {
+      updateIntervalsVolumes(event as Swap, pairIntervalData as Pair1minData)
+    }
     pairIntervalData.save()
 }
 
-function update5minData (event: ethereum.Event): void {
+function update5minData (event: ethereum.Event, updateVolumes: boolean): void {
     let intervalInSec = 300 //value of period in sec
 
     let timestamp = event.block.timestamp.toI32()
@@ -130,7 +138,8 @@ function update5minData (event: ethereum.Event): void {
     let pairIntervalData = Pair5minData.load(intervalEntityID)
     if (pairIntervalData === null) {
       pairIntervalData = new Pair5minData (intervalEntityID)
-
+      pairIntervalData.volumeBNB = ZERO_BD
+      pairIntervalData.volumeUSD = ZERO_BD
       pairIntervalData.startTimestamp = intervalStartUnix
       pairIntervalData.maxTimestamp = timestamp
       pairIntervalData.pair = pair.id
@@ -186,11 +195,14 @@ function update5minData (event: ethereum.Event): void {
     pairIntervalData.highToken1BNB = pairIntervalData.highToken1BNB > token1.derivedBNB ?  pairIntervalData.highToken1BNB : token1.derivedBNB
     pairIntervalData.lowToken0BNB = pairIntervalData.lowToken0BNB < token0.derivedBNB ?  pairIntervalData.lowToken0BNB : token0.derivedBNB
     pairIntervalData.lowToken1BNB = pairIntervalData.lowToken1BNB < token1.derivedBNB ?  pairIntervalData.lowToken1BNB : token1.derivedBNB
+    if (updateVolumes) {
+      updateIntervalsVolumes(event as Swap, pairIntervalData as Pair1minData)
+    }
     pairIntervalData.save()
 }
 
 
-function update15minData (event: ethereum.Event): void {
+function update15minData (event: ethereum.Event, updateVolumes: boolean): void {
     let intervalInSec = 900 //value of period in sec
 
     let timestamp = event.block.timestamp.toI32()
@@ -212,7 +224,8 @@ function update15minData (event: ethereum.Event): void {
     if (pairIntervalData === null) {
       pairIntervalData = new Pair15minData (intervalEntityID)
 
-
+      pairIntervalData.volumeBNB = ZERO_BD
+      pairIntervalData.volumeUSD = ZERO_BD
       pairIntervalData.startTimestamp = intervalStartUnix
       pairIntervalData.maxTimestamp = timestamp
       pairIntervalData.pair = pair.id
@@ -268,10 +281,13 @@ function update15minData (event: ethereum.Event): void {
     pairIntervalData.highToken1BNB = pairIntervalData.highToken1BNB > token1.derivedBNB ?  pairIntervalData.highToken1BNB : token1.derivedBNB
     pairIntervalData.lowToken0BNB = pairIntervalData.lowToken0BNB < token0.derivedBNB ?  pairIntervalData.lowToken0BNB : token0.derivedBNB
     pairIntervalData.lowToken1BNB = pairIntervalData.lowToken1BNB < token1.derivedBNB ?  pairIntervalData.lowToken1BNB : token1.derivedBNB
+    if (updateVolumes) {
+      updateIntervalsVolumes(event as Swap, pairIntervalData as Pair1minData)
+    }
     pairIntervalData.save()
 }
 
-function update30minData (event: ethereum.Event): void {
+function update30minData (event: ethereum.Event, updateVolumes: boolean): void {
     let intervalInSec = 1800 //value of period in sec
 
     let timestamp = event.block.timestamp.toI32()
@@ -292,7 +308,8 @@ function update30minData (event: ethereum.Event): void {
     let pairIntervalData = Pair30minData.load(intervalEntityID)
     if (pairIntervalData === null) {
       pairIntervalData = new Pair30minData (intervalEntityID)
-
+      pairIntervalData.volumeBNB = ZERO_BD
+      pairIntervalData.volumeUSD = ZERO_BD
       pairIntervalData.startTimestamp = intervalStartUnix
       pairIntervalData.maxTimestamp = timestamp
       pairIntervalData.pair = pair.id
@@ -348,10 +365,13 @@ function update30minData (event: ethereum.Event): void {
     pairIntervalData.highToken1BNB = pairIntervalData.highToken1BNB > token1.derivedBNB ?  pairIntervalData.highToken1BNB : token1.derivedBNB
     pairIntervalData.lowToken0BNB = pairIntervalData.lowToken0BNB < token0.derivedBNB ?  pairIntervalData.lowToken0BNB : token0.derivedBNB
     pairIntervalData.lowToken1BNB = pairIntervalData.lowToken1BNB < token1.derivedBNB ?  pairIntervalData.lowToken1BNB : token1.derivedBNB
+    if (updateVolumes) {
+      updateIntervalsVolumes(event as Swap, pairIntervalData as Pair1minData)
+    }
     pairIntervalData.save()
 }
 
-function update1hData (event: ethereum.Event): void {
+function update1hData (event: ethereum.Event, updateVolumes: boolean): void {
     let intervalInSec = 3600 //value of period in sec
 
     let timestamp = event.block.timestamp.toI32()
@@ -372,7 +392,8 @@ function update1hData (event: ethereum.Event): void {
     let pairIntervalData = Pair1hData.load(intervalEntityID)
     if (pairIntervalData === null) {
       pairIntervalData = new Pair1hData (intervalEntityID)
-
+      pairIntervalData.volumeBNB = ZERO_BD
+      pairIntervalData.volumeUSD = ZERO_BD
       pairIntervalData.startTimestamp = intervalStartUnix
       pairIntervalData.maxTimestamp = timestamp
       pairIntervalData.pair = pair.id
@@ -428,10 +449,13 @@ function update1hData (event: ethereum.Event): void {
     pairIntervalData.highToken1BNB = pairIntervalData.highToken1BNB > token1.derivedBNB ?  pairIntervalData.highToken1BNB : token1.derivedBNB
     pairIntervalData.lowToken0BNB = pairIntervalData.lowToken0BNB < token0.derivedBNB ?  pairIntervalData.lowToken0BNB : token0.derivedBNB
     pairIntervalData.lowToken1BNB = pairIntervalData.lowToken1BNB < token1.derivedBNB ?  pairIntervalData.lowToken1BNB : token1.derivedBNB
+    if (updateVolumes) {
+      updateIntervalsVolumes(event as Swap, pairIntervalData as Pair1minData)
+    }
     pairIntervalData.save()
 }
 
-function update3hData (event: ethereum.Event): void {
+function update3hData (event: ethereum.Event, updateVolumes: boolean): void {
     let intervalInSec = 10800 //value of period in sec
 
     let timestamp = event.block.timestamp.toI32()
@@ -452,7 +476,8 @@ function update3hData (event: ethereum.Event): void {
     let pairIntervalData = Pair3hData.load(intervalEntityID)
     if (pairIntervalData === null) {
       pairIntervalData = new Pair3hData (intervalEntityID)
-
+      pairIntervalData.volumeBNB = ZERO_BD
+      pairIntervalData.volumeUSD = ZERO_BD
       pairIntervalData.startTimestamp = intervalStartUnix
       pairIntervalData.maxTimestamp = timestamp
       pairIntervalData.pair = pair.id
@@ -508,10 +533,13 @@ function update3hData (event: ethereum.Event): void {
     pairIntervalData.highToken1BNB = pairIntervalData.highToken1BNB > token1.derivedBNB ?  pairIntervalData.highToken1BNB : token1.derivedBNB
     pairIntervalData.lowToken0BNB = pairIntervalData.lowToken0BNB < token0.derivedBNB ?  pairIntervalData.lowToken0BNB : token0.derivedBNB
     pairIntervalData.lowToken1BNB = pairIntervalData.lowToken1BNB < token1.derivedBNB ?  pairIntervalData.lowToken1BNB : token1.derivedBNB
+    if (updateVolumes) {
+      updateIntervalsVolumes(event as Swap, pairIntervalData as Pair1minData)
+    }
     pairIntervalData.save()
 }
 
-function update6hData (event: ethereum.Event): void {
+function update6hData (event: ethereum.Event, updateVolumes: boolean): void {
     let intervalInSec = 21600 //value of period in sec
 
     let timestamp = event.block.timestamp.toI32()
@@ -532,7 +560,8 @@ function update6hData (event: ethereum.Event): void {
     let pairIntervalData = Pair6hData.load(intervalEntityID)
     if (pairIntervalData === null) {
       pairIntervalData = new Pair6hData (intervalEntityID)
-
+      pairIntervalData.volumeBNB = ZERO_BD
+      pairIntervalData.volumeUSD = ZERO_BD
       pairIntervalData.startTimestamp = intervalStartUnix
       pairIntervalData.maxTimestamp = timestamp
       pairIntervalData.pair = pair.id
@@ -588,10 +617,13 @@ function update6hData (event: ethereum.Event): void {
     pairIntervalData.highToken1BNB = pairIntervalData.highToken1BNB > token1.derivedBNB ?  pairIntervalData.highToken1BNB : token1.derivedBNB
     pairIntervalData.lowToken0BNB = pairIntervalData.lowToken0BNB < token0.derivedBNB ?  pairIntervalData.lowToken0BNB : token0.derivedBNB
     pairIntervalData.lowToken1BNB = pairIntervalData.lowToken1BNB < token1.derivedBNB ?  pairIntervalData.lowToken1BNB : token1.derivedBNB
+    if (updateVolumes) {
+      updateIntervalsVolumes(event as Swap, pairIntervalData as Pair1minData)
+    }
     pairIntervalData.save()
 }
 
-function update12hData (event: ethereum.Event): void {
+function update12hData (event: ethereum.Event, updateVolumes: boolean): void {
     let intervalInSec = 43200 //value of period in sec
 
     let timestamp = event.block.timestamp.toI32()
@@ -612,7 +644,8 @@ function update12hData (event: ethereum.Event): void {
     let pairIntervalData = Pair12hData.load(intervalEntityID)
     if (pairIntervalData === null) {
       pairIntervalData = new Pair12hData (intervalEntityID)
-
+      pairIntervalData.volumeBNB = ZERO_BD
+      pairIntervalData.volumeUSD = ZERO_BD
       pairIntervalData.startTimestamp = intervalStartUnix
       pairIntervalData.maxTimestamp = timestamp
       pairIntervalData.pair = pair.id
@@ -668,10 +701,13 @@ function update12hData (event: ethereum.Event): void {
     pairIntervalData.highToken1BNB = pairIntervalData.highToken1BNB > token1.derivedBNB ?  pairIntervalData.highToken1BNB : token1.derivedBNB
     pairIntervalData.lowToken0BNB = pairIntervalData.lowToken0BNB < token0.derivedBNB ?  pairIntervalData.lowToken0BNB : token0.derivedBNB
     pairIntervalData.lowToken1BNB = pairIntervalData.lowToken1BNB < token1.derivedBNB ?  pairIntervalData.lowToken1BNB : token1.derivedBNB
+    if (updateVolumes) {
+      updateIntervalsVolumes(event as Swap, pairIntervalData as Pair1minData)
+    }
     pairIntervalData.save()
 }
 
-function update1dData (event: ethereum.Event): void {
+function update1dData (event: ethereum.Event, updateVolumes: boolean): void {
     let intervalInSec = 86400 //value of period in sec
 
     let timestamp = event.block.timestamp.toI32()
@@ -692,7 +728,8 @@ function update1dData (event: ethereum.Event): void {
     let pairIntervalData = Pair1dData.load(intervalEntityID)
     if (pairIntervalData === null) {
       pairIntervalData = new Pair1dData (intervalEntityID)
-
+      pairIntervalData.volumeBNB = ZERO_BD
+      pairIntervalData.volumeUSD = ZERO_BD
       pairIntervalData.startTimestamp = intervalStartUnix
       pairIntervalData.maxTimestamp = timestamp
       pairIntervalData.pair = pair.id
@@ -748,11 +785,13 @@ function update1dData (event: ethereum.Event): void {
     pairIntervalData.highToken1BNB = pairIntervalData.highToken1BNB > token1.derivedBNB ?  pairIntervalData.highToken1BNB : token1.derivedBNB
     pairIntervalData.lowToken0BNB = pairIntervalData.lowToken0BNB < token0.derivedBNB ?  pairIntervalData.lowToken0BNB : token0.derivedBNB
     pairIntervalData.lowToken1BNB = pairIntervalData.lowToken1BNB < token1.derivedBNB ?  pairIntervalData.lowToken1BNB : token1.derivedBNB
+    if (updateVolumes) {
+      updateIntervalsVolumes(event as Swap, pairIntervalData as Pair1minData)
+    }
     pairIntervalData.save()
 }
 
-
-function update3dData (event: ethereum.Event): void {
+function update3dData (event: ethereum.Event, updateVolumes: boolean): void {
     let intervalInSec = 259200 //value of period in sec
 
     let timestamp = event.block.timestamp.toI32()
@@ -774,7 +813,8 @@ function update3dData (event: ethereum.Event): void {
     if (pairIntervalData === null) {
       pairIntervalData = new Pair3dData (intervalEntityID)
 
-
+      pairIntervalData.volumeBNB = ZERO_BD
+      pairIntervalData.volumeUSD = ZERO_BD
       pairIntervalData.startTimestamp = intervalStartUnix
       pairIntervalData.maxTimestamp = timestamp
       pairIntervalData.pair = pair.id
@@ -830,5 +870,8 @@ function update3dData (event: ethereum.Event): void {
     pairIntervalData.highToken1BNB = pairIntervalData.highToken1BNB > token1.derivedBNB ?  pairIntervalData.highToken1BNB : token1.derivedBNB
     pairIntervalData.lowToken0BNB = pairIntervalData.lowToken0BNB < token0.derivedBNB ?  pairIntervalData.lowToken0BNB : token0.derivedBNB
     pairIntervalData.lowToken1BNB = pairIntervalData.lowToken1BNB < token1.derivedBNB ?  pairIntervalData.lowToken1BNB : token1.derivedBNB
+    if (updateVolumes) {
+      updateIntervalsVolumes(event as Swap, pairIntervalData as Pair1minData)
+    }
     pairIntervalData.save()
 }

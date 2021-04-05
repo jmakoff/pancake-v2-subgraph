@@ -303,6 +303,8 @@ type Pair1minData @entity {
   pair: Pair!
   startTimestamp: Int!
   maxTimestamp: Int!
+  volumeBNB: BigDecimal!
+  volumeUSD: BigDecimal!
   openToken1Price: BigDecimal!
   openToken0Price: BigDecimal!
   closeToken1Price: BigDecimal!
@@ -334,6 +336,8 @@ type Pair5minData @entity {
   pair: Pair!
   startTimestamp: Int!
   maxTimestamp: Int!
+  volumeBNB: BigDecimal!
+  volumeUSD: BigDecimal!
   openToken1Price: BigDecimal!
   openToken0Price: BigDecimal!
   closeToken1Price: BigDecimal!
@@ -364,6 +368,8 @@ type Pair15minData @entity {
   pair: Pair!
   startTimestamp: Int!
   maxTimestamp: Int!
+  volumeBNB: BigDecimal!
+  volumeUSD: BigDecimal!
   openToken1Price: BigDecimal!
   openToken0Price: BigDecimal!
   closeToken1Price: BigDecimal!
@@ -395,6 +401,8 @@ type Pair30minData @entity {
   pair: Pair!
   startTimestamp: Int!
   maxTimestamp: Int!
+  volumeBNB: BigDecimal!
+  volumeUSD: BigDecimal!
   openToken1Price: BigDecimal!
   openToken0Price: BigDecimal!
   closeToken1Price: BigDecimal!
@@ -427,6 +435,8 @@ type Pair1hData @entity {
   pair: Pair!
   startTimestamp: Int!
   maxTimestamp: Int!
+  volumeBNB: BigDecimal!
+  volumeUSD: BigDecimal!
   openToken1Price: BigDecimal!
   openToken0Price: BigDecimal!
   closeToken1Price: BigDecimal!
@@ -459,6 +469,8 @@ type Pair3hData @entity {
   pair: Pair!
   startTimestamp: Int!
   maxTimestamp: Int!
+  volumeBNB: BigDecimal!
+  volumeUSD: BigDecimal!
   openToken1Price: BigDecimal!
   openToken0Price: BigDecimal!
   closeToken1Price: BigDecimal!
@@ -491,6 +503,8 @@ type Pair6hData @entity {
   pair: Pair!
   startTimestamp: Int!
   maxTimestamp: Int!
+  volumeBNB: BigDecimal!
+  volumeUSD: BigDecimal!
   openToken1Price: BigDecimal!
   openToken0Price: BigDecimal!
   closeToken1Price: BigDecimal!
@@ -523,6 +537,8 @@ type Pair12hData @entity {
   pair: Pair!
   startTimestamp: Int!
   maxTimestamp: Int!
+  volumeBNB: BigDecimal!
+  volumeUSD: BigDecimal!
   openToken1Price: BigDecimal!
   openToken0Price: BigDecimal!
   closeToken1Price: BigDecimal!
@@ -555,6 +571,8 @@ type Pair1dData @entity {
   pair: Pair!
   startTimestamp: Int!
   maxTimestamp: Int!
+  volumeBNB: BigDecimal!
+  volumeUSD: BigDecimal!
   openToken1Price: BigDecimal!
   openToken0Price: BigDecimal!
   closeToken1Price: BigDecimal!
@@ -586,6 +604,8 @@ type Pair3dData @entity {
   pair: Pair!
   startTimestamp: Int!
   maxTimestamp: Int!
+  volumeBNB: BigDecimal!
+  volumeUSD: BigDecimal!
   openToken1Price: BigDecimal!
   openToken0Price: BigDecimal!
   closeToken1Price: BigDecimal!

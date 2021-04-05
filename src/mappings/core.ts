@@ -13,6 +13,7 @@ import {
 import { Pair as PairContract, Mint, Burn, Swap, Transfer, Sync } from '../types/templates/Pair/Pair'
 import { updatePairDayData, updateTokenDayData, updateUniswapDayData, updatePairHourData } from './dayUpdates'
 import { updateIntervalsData } from './intervalsUpdates'
+import { updateIntervalsVolumes } from './intervalsVolumes';
 
 import { getBnbPriceInUSD, findBnbPerToken, getTrackedVolumeUSD, getTrackedLiquidityUSD } from './pricing'
 import {
@@ -326,7 +327,7 @@ export function handleMint(event: Mint): void {
   updateUniswapDayData(event)
   updateTokenDayData(token0 as Token, event)
   updateTokenDayData(token1 as Token, event)
-  updateIntervalsData(event)
+  updateIntervalsData(event, false)
 }
 
 export function handleBurn(event: Burn): void {
@@ -385,7 +386,7 @@ export function handleBurn(event: Burn): void {
   updateUniswapDayData(event)
   updateTokenDayData(token0 as Token, event)
   updateTokenDayData(token1 as Token, event)
-  updateIntervalsData(event)
+  updateIntervalsData(event, false)
 }
 
 export function handleSwap(event: Swap): void {
@@ -508,7 +509,7 @@ export function handleSwap(event: Swap): void {
   let uniswapDayData = updateUniswapDayData(event)
   let token0DayData = updateTokenDayData(token0 as Token, event)
   let token1DayData = updateTokenDayData(token1 as Token, event)
-  updateIntervalsData(event)
+  updateIntervalsData(event, true)
 
   // swap specific updating
   uniswapDayData.dailyVolumeUSD = uniswapDayData.dailyVolumeUSD.plus(trackedAmountUSD)
