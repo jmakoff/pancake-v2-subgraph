@@ -484,9 +484,9 @@ export function handleSwap(event: Swap): void {
   swap.amount1In = amount1In
   swap.amount0Out = amount0Out
   swap.amount1Out = amount1Out
-  swap.amountToken = amount1In.minus(amount1Out).gt(ZERO_BD) ? amount1In.minus(amount1Out) : amount1In.minus(amount1Out).neg()
-  swap.priceBNB = token1.derivedBNB
-  swap.priceUSD = token1.derivedBNB.times(bundle.bnbPrice)
+  swap.amountToken = amount0In.minus(amount0Out).gt(ZERO_BD) ? amount0In.minus(amount0Out) : amount1In.minus(amount0Out).neg()
+  swap.priceBNB = token0.derivedBNB
+  swap.priceUSD = token0.derivedBNB.times(bundle.bnbPrice)
   swap.totalBNB = derivedAmountBNB
   swap.to = event.params.to
   swap.from = event.transaction.from
