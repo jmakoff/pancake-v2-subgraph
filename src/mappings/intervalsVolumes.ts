@@ -12,7 +12,7 @@ export function updateIntervalsVolumes (event: Swap, pairInstance: Pair1minData)
 
     let amount0In = convertTokenToDecimal(event.params.amount0In, token0.decimals)
     let amount0Out = convertTokenToDecimal(event.params.amount0Out, token0.decimals)
-    pairInstance.volumeBNB = amount0In.plus(amount0Out).times(token0.derivedBNB)
+    pairInstance.volumeBNB = pairInstance.volumeBNB.plus(amount0In.plus(amount0Out).times(token0.derivedBNB))
     pairInstance.volumeUSD = pairInstance.volumeBNB.times(bundle.bnbPrice)
     pairInstance.save()
 }
